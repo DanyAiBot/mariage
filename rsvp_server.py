@@ -85,6 +85,12 @@ def push_repo(message="mise à jour"):
 
     def run():
         try:
+            # Garde-fou : sur ce montage 9p un fichier peut disparaître du disque.
+            # Sans cela, `git add -A` validerait la suppression et casserait le site.
+            for f in ("index.html", "admin.html", "alliances.svg", "contenu.json", "rsvp.json"):
+                if not os.path.exists(os.path.join(HERE, f)):
+                    subprocess.run(["git", "checkout", "HEAD", "--", f], cwd=HERE, env=env, timeout=60)
+                    print("garde-fou: " + f + " restauré depuis git", flush=True)
             subprocess.run(["git", "add", "-A"], cwd=HERE, env=env, timeout=90)
             subprocess.run(["git", "-c", "user.email=bot@local", "-c", "user.name=DanyAiBot",
                             "commit", "-qm", message], cwd=HERE, env=env, timeout=60)
