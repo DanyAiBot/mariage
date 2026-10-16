@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notre mariage</title>
+<meta name="description" content="Le déroulé et les photos de notre mariage.">
+<style>
+  :root{
+    --ink:#2b2523; --ink-soft:#6b5f5a; --cream:#fbf7f2; --card:#ffffff;
+    --gold:#b0863f; --line:#e7ddd2;
+    --serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:.01em;margin:0}
+  a{color:var(--gold)}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+  /* ---------- hero ---------- */
+  header.hero{
+    position:relative;text-align:center;padding:96px 20px 72px;
+    background:linear-gradient(160deg,#fdfaf6 0%,#f4ece2 100%);
+    border-bottom:1px solid var(--line);
+  }
+  .kicker{font-family:var(--sans);text-transform:uppercase;letter-spacing:.32em;font-size:.7rem;color:var(--gold);margin-bottom:22px}
+  .hero h1{font-size:clamp(2.4rem,7vw,4.2rem);line-height:1.1}
+  .amp{display:block;font-size:.5em;color:var(--gold);margin:6px 0}
+  .date{margin-top:22px;font-family:var(--serif);font-size:1.35rem;color:var(--ink-soft)}
+  .place{margin-top:6px;color:var(--ink-soft);font-size:.95rem}
+  .rule{width:64px;height:1px;background:var(--gold);margin:34px auto;opacity:.6}
+  .countdown{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:8px}
+  .cd{background:#fff;border:1px solid var(--line);border-radius:14px;min-width:82px;padding:12px 14px}
+  .cd b{display:block;font-family:var(--serif);font-size:1.9rem;line-height:1}
+  .cd span{font-size:.66rem;text-transform:uppercase;letter-spacing:.16em;color:var(--ink-soft)}
+  /* ---------- sections ---------- */
+  section{padding:64px 0;border-bottom:1px solid var(--line)}
+  section:last-of-type{border-bottom:0}
+  h2{font-size:clamp(1.7rem,4vw,2.4rem);margin-bottom:8px}
+  .sub{color:var(--ink-soft);margin:0 0 32px}
+  /* ---------- timeline ---------- */
+  .timeline{list-style:none;margin:0;padding:0}
+  .timeline li{display:grid;grid-template-columns:96px 1fr;gap:18px;padding:18px 0;border-top:1px dashed var(--line)}
+  .timeline li:first-child{border-top:0}
+  .timeline time{font-family:var(--serif);font-size:1.4rem;color:var(--gold)}
+  .timeline strong{display:block;font-size:1.02rem}
+  .timeline small{color:var(--ink-soft)}
+  /* ---------- gallery ---------- */
+  .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+  .gallery figure{margin:0;position:relative;overflow:hidden;border-radius:12px;background:#efe7dc;aspect-ratio:4/3;cursor:zoom-in;border:1px solid var(--line)}
+  .gallery img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+  .gallery figure:hover img{transform:scale(1.05)}
+  .gallery figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px 12px 10px;font-size:.8rem;color:#fff;
+    background:linear-gradient(transparent,rgba(0,0,0,.55));opacity:0;transition:opacity .3s ease}
+  .gallery figure:hover figcaption{opacity:1}
+  .empty{border:1px dashed var(--line);border-radius:12px;padding:28px;text-align:center;color:var(--ink-soft);background:#fff}
+  /* lightbox */
+  .lb{position:fixed;inset:0;background:rgba(28,22,20,.94);display:none;align-items:center;justify-content:center;z-index:50;padding:24px}
+  .lb.open{display:flex}
+  .lb img{max-width:100%;max-height:88vh;border-radius:8px}
+  .lb button{position:absolute;background:none;border:0;color:#fff;font-size:2rem;cursor:pointer;opacity:.75;padding:8px 14px}
+  .lb button:hover{opacity:1}
+  .lb .prev{left:12px;top:50%;transform:translateY(-50%)}
+  .lb .next{right:12px;top:50%;transform:translateY(-50%)}
+  .lb .close{right:14px;top:10px}
+  /* ---------- info cards ---------- */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .card h3{font-size:1.15rem;margin-bottom:6px}
+  .card p{margin:.3rem 0;color:var(--ink-soft)}
+  .btn{display:inline-block;margin-top:10px;background:var(--gold);color:#fff;text-decoration:none;padding:11px 20px;border-radius:999px;font-size:.9rem}
+  .btn.ghost{background:none;color:var(--gold);border:1px solid var(--gold)}
+  footer{padding:40px 20px 64px;text-align:center;color:var(--ink-soft);font-size:.85rem}
+  footer .heart{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<script>
+/* ============================================================
+   À MODIFIER — tout le contenu du site est ici.
+   ============================================================ */
+const CONFIG = {
+  marie1:   "Prénom",          // ← le premier marié
+  marie2:   "Prénom",          // ← le second marié
+  dateISO:  "2027-06-12T15:00:00",  // ← date + heure (format AAAA-MM-JJTHH:MM:SS)
+  dateTexte:"Samedi 12 juin 2027",
+  lieu:     "Domaine des Oliviers, Aix-en-Provence",
+  adresse:  "Chemin des Oliviers, 13100 Aix-en-Provence",
+  rsvp:     "",                // ← email ou lien de RSVP (vide = bouton masqué)
+
+  /* Le déroulé de la journée — ajoute/retire des lignes librement */
+  programme: [
+    ["15h00", "Cérémonie civile",  "Mairie du 6e — arrivée conseillée 14h40"],
+    ["16h30", "Cérémonie laïque",  "Sous les oliviers, en plein air"],
+    ["18h00", "Cocktail",          "Vins du domaine et buffet méditerranéen"],
+    ["20h30", "Dîner",             "Grande table sous la pergola"],
+    ["23h00", "Bal & soirée",      "DJ jusqu'au bout de la nuit"],
+  ],
+
+  /* Les photos. "src" = chemin du fichier, "legende" = texte au survol.
+     Exemple : {src:"photos/ceremonie.jpg", legende:"La cérémonie"}
+     Envoie-moi les fichiers et je remplis cette liste. */
+  photos: [],
+};
+/* ============================================================ */
+</script>
+
+<header class="hero">
+  <div class="kicker">Nous nous marions</div>
+  <h1><span id="n1"></span><span class="amp">&amp;</span><span id="n2"></span></h1>
+  <div class="rule"></div>
+  <div class="date" id="date"></div>
+  <div class="place" id="place"></div>
+  <div class="rule"></div>
+  <div class="countdown" id="cd" hidden>
+    <div class="cd"><b id="d">0</b><span>jours</span></div>
+    <div class="cd"><b id="h">0</b><span>heures</span></div>
+    <div class="cd"><b id="m">0</b><span>minutes</span></div>
+    <div class="cd"><b id="s">0</b><span>secondes</span></div>
+  </div>
+</header>
+
+<main>
+  <section class="wrap" id="programme">
+    <h2>Le déroulé</h2>
+    <p class="sub">La journée, heure par heure.</p>
+    <ul class="timeline" id="timeline"></ul>
+  </section>
+
+  <section class="wrap" id="lieu">
+    <h2>Le lieu</h2>
+    <p class="sub" id="adresse"></p>
+    <a class="btn" id="maps" target="_blank" rel="noopener">Ouvrir dans la carte</a>
+  </section>
+
+  <section class="wrap" id="photos">
+    <h2>Les photos</h2>
+    <p class="sub">Cliquez sur une photo pour l’agrandir.</p>
+    <div class="gallery" id="gallery"></div>
+    <div class="empty" id="empty" hidden>Aucune photo pour l’instant — elles arrivent bientôt.</div>
+  </section>
+
+  <section class="wrap" id="infos">
+    <h2>Infos pratiques</h2>
+    <p class="sub">Ce qu’il faut savoir avant de venir.</p>
+    <div class="cards">
+      <div class="card">
+        <h3>Confirmer sa présence</h3>
+        <p id="rsvptxt">Merci de répondre avant le 30 avril.</p>
+        <a class="btn" id="rsvp" href="#" hidden>Je confirme</a>
+      </div>
+      <div class="card">
+        <h3>Tenue</h3>
+        <p>Élégante mais libre. Prévoir des chaussures qui supportent l’herbe.</p>
+      </div>
+      <div class="card">
+        <h3>Accès</h3>
+        <p id="acces"></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Réalisé avec <span class="heart">♥</span> — fait main, page unique, aucune donnée collectée.
+</footer>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true">
+  <button class="close" id="lbc" aria-label="Fermer">×</button>
+  <button class="prev" id="lbp" aria-label="Précédent">‹</button>
+  <img id="lbi" alt="">
+  <button class="next" id="lbn" aria-label="Suivant">›</button>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* --- textes --- */
+document.title = `${CONFIG.marie1} & ${CONFIG.marie2} — notre mariage`;
+$("n1").textContent = CONFIG.marie1;
+$("n2").textContent = CONFIG.marie2;
+$("date").textContent = CONFIG.dateTexte;
+$("place").textContent = CONFIG.lieu;
+$("adresse").textContent = CONFIG.adresse;
+$("acces").textContent = CONFIG.adresse;
+$("maps").href = "https://www.openstreetmap.org/search?query=" + encodeURIComponent(CONFIG.adresse);
+
+/* --- déroulé --- */
+$("timeline").innerHTML = CONFIG.programme.map(([h,t,d]) =>
+  `<li><time>${esc(h)}</time><div><strong>${esc(t)}</strong><small>${esc(d)}</small></div></li>`).join("");
+
+/* --- RSVP --- */
+if (CONFIG.rsvp) { const a = $("rsvp"); a.href = CONFIG.rsvp; a.hidden = false; }
+
+/* --- compte à rebours --- */
+const target = new Date(CONFIG.dateISO).getTime();
+const pad = n => String(n).padStart(2, "0");
+function tick(){
+  const left = target - Date.now();
+  if (isNaN(target)) return;
+  if (left <= 0) { $("cd").innerHTML = '<div class="cd"><b>Le grand jour est arrivé</b></div>'; $("cd").hidden = false; return; }
+  $("cd").hidden = false;
+  $("d").textContent = Math.floor(left / 864e5);
+  $("h").textContent = Math.floor(left / 36e5) % 24;
+  $("m").textContent = Math.floor(left / 6e4) % 60;
+  $("s").textContent = pad(Math.floor(left / 1e3) % 60);
+}
+tick(); setInterval(tick, 1000);
+
+/* --- galerie + lightbox --- */
+const ph = CONFIG.photos || [];
+if (!ph.length) { $("empty").hidden = false; }
+$("gallery").innerHTML = ph.map((p, i) =>
+  `<figure data-i="${i}"><img loading="lazy" src="${esc(p.src)}" alt="${esc(p.legende||"")}">
+   ${p.legende ? `<figcaption>${esc(p.legende)}</figcaption>` : ""}</figure>`).join("");
+
+let cur = 0;
+const lb = $("lb"), lbi = $("lbi");
+function show(i){ if(!ph.length) return; cur = (i + ph.length) % ph.length; lbi.src = ph[cur].src; lb.classList.add("open"); }
+$("gallery").addEventListener("click", e => { const f = e.target.closest("figure"); if (f) show(+f.dataset.i); });
+$("lbc").onclick = () => lb.classList.remove("open");
+$("lbp").onclick = e => { e.stopPropagation(); show(cur - 1); };
+$("lbn").onclick = e => { e.stopPropagation(); show(cur + 1); };
+lb.onclick = e => { if (e.target === lb) lb.classList.remove("open"); };
+document.addEventListener("keydown", e => {
+  if (!lb.classList.contains("open")) return;
+  if (e.key === "Escape") lb.classList.remove("open");
+  if (e.key === "ArrowLeft") show(cur - 1);
+  if (e.key === "ArrowRight") show(cur + 1);
+});
+</script>
+</body>
+</html>
