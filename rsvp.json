@@ -1,4 +1,13 @@
 {
-  "rsvp": [],
-  "maj": null
+  "rsvp": [
+    {
+      "nom": "Test Admin Flow",
+      "reponse": "oui",
+      "personnes": 2,
+      "enfants": 0,
+      "message": "",
+      "quand": "16/10/2026 08:25"
+    }
+  ],
+  "maj": "16/10/2026 08:25"
 }
