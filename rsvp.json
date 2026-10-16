@@ -1,6 +1,12 @@
 {
   "rsvp": [
     {
+      "nom": "Faustin Testeur",
+      "reponse": "oui",
+      "personnes": 3,
+      "quand": "16/10/2026 08:09"
+    },
+    {
       "nom": "Test Interne",
       "reponse": "oui",
       "personnes": 2,
@@ -13,5 +19,5 @@
       "quand": "16/10/2026 08:06"
     }
   ],
-  "maj": "16/10/2026 08:06"
+  "maj": "16/10/2026 08:09"
 }
