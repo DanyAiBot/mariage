@@ -1,19 +1,39 @@
 {
-  "kicker": "Nous nous marions",
   "marie1": "Guillaume",
   "marie2": "Valentia",
   "dateISO": "2028-07-07T15:00:00",
   "dateTexte": "Vendredi 7 juillet 2028",
-  "lieu": "Lieu à préciser",
+  "lieu": "TEST Lieu — Domaine des Oliviers",
   "adresse": "Adresse à préciser",
   "email": "",
   "rsvpAvant": "30 avril 2028",
+  "kicker": "Nous nous marions",
   "programme": [
-    ["15h00", "Cérémonie civile", "Mairie — arrivée conseillée 14h40"],
-    ["16h30", "Cérémonie laïque", "En plein air"],
-    ["18h00", "Cocktail", "Vins et buffet"],
-    ["20h30", "Dîner", "Grande table"],
-    ["23h00", "Bal & soirée", "Jusqu'au bout de la nuit"]
+    [
+      "15h00",
+      "Cérémonie civile",
+      "Mairie — arrivée conseillée 14h40"
+    ],
+    [
+      "16h30",
+      "Cérémonie laïque",
+      "En plein air"
+    ],
+    [
+      "18h00",
+      "Cocktail",
+      "Vins et buffet"
+    ],
+    [
+      "20h30",
+      "Dîner",
+      "Grande table"
+    ],
+    [
+      "23h00",
+      "Bal & soirée",
+      "Jusqu'au bout de la nuit"
+    ]
   ],
   "photos": []
 }
