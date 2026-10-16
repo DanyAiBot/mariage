@@ -193,12 +193,7 @@ const CONFIG = {
     </div>
     <p class="sub" id="maj" style="margin-top:12px"></p>
 
-    <div class="guestlist" id="guestlist" hidden>
-      <details>
-        <summary>Voir la liste des réponses</summary>
-        <ul id="liste"></ul>
-      </details>
-    </div>
+    <p class="sub" style="margin-top:18px">La liste des invités reste privée : seuls les compteurs sont affichés ici.</p>
   </section>
 
   <section class="wrap" id="programme">
@@ -323,12 +318,6 @@ function afficher(d){
   $("s-non").textContent  = (c.foyers_non === undefined ? "–" : c.foyers_non);
   $("scores").hidden = false;
   $("maj").textContent = c.maj ? "Dernière réponse enregistrée : " + c.maj : "";
-  const list = d.rsvp || [];
-  if (list.length) {
-    $("guestlist").hidden = false;
-    $("liste").innerHTML = list.map(r => '<li><strong>' + esc(r.nom) + '</strong> — ' +
-      (r.reponse === "oui" ? ("présent·e (" + r.personnes + " pers.)") : "ne sera pas là") + '</li>').join("");
-  }
 }
 
 function erreur(t){ msg.className = "msg err"; msg.textContent = t; }

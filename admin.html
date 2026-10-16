@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Administration — réponses au mariage</title>
+<style>
+  :root{
+    --ink:#2b2523; --ink-soft:#6b5f5a; --cream:#fbf7f2; --card:#fff;
+    --gold:#b0863f; --line:#e7ddd2; --ok:#2f6b35; --ko:#8d3b33;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.55}
+  header{background:#fff;border-bottom:1px solid var(--line);padding:16px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
+  header h1{font-size:1.05rem;margin:0;letter-spacing:.02em}
+  header .sp{flex:1}
+  .wrap{max-width:1060px;margin:0 auto;padding:24px 20px 60px}
+  button,.btn{background:var(--gold);color:#fff;border:0;border-radius:999px;padding:9px 16px;font-size:.86rem;cursor:pointer;font-family:var(--sans);text-decoration:none;display:inline-block}
+  button.ghost,.btn.ghost{background:none;color:var(--gold);border:1px solid var(--gold)}
+  button.danger{background:none;color:var(--ko);border:1px solid #f0d4d0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:26px}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+  .stat b{display:block;font-size:2.2rem;line-height:1.1;color:var(--gold)}
+  .stat span{font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;color:var(--ink-soft)}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:22px}
+  .panel h2{font-size:1rem;margin:0 0 12px;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft)}
+  input[type=text],input[type=password]{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;font-size:1rem;background:var(--cream);color:var(--ink);font-family:var(--sans)}
+  table{width:100%;border-collapse:collapse;font-size:.92rem}
+  th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft);font-weight:600}
+  .tag{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.78rem;border:1px solid}
+  .tag.oui{color:var(--ok);border-color:#cfe6d1;background:#eef7ee}
+  .tag.non{color:var(--ko);border-color:#f0d4d0;background:#fdf0ef}
+  .row-actions{white-space:nowrap}
+  .msg{margin:12px 0;padding:10px 14px;border-radius:10px;font-size:.9rem;display:none}
+  .msg.err{display:block;background:#fdf0ef;color:var(--ko);border:1px solid #f0d4d0}
+  .msg.ok{display:block;background:#eef7ee;color:var(--ok);border:1px solid #cfe6d1}
+  .muted{color:var(--ink-soft);font-size:.88rem}
+  #app{display:none}
+  .login{max-width:420px;margin:60px auto;background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px}
+  .login h1{font-size:1.2rem;margin:0 0 6px}
+  .login button{width:100%;margin-top:14px}
+  @media (max-width:640px){ .hide-s{display:none} }
+</style>
+</head>
+<body>
+
+<!-- ---------- connexion ---------- -->
+<div class="login" id="login">
+  <h1>Administration</h1>
+  <p class="muted">Réponses au mariage de Guillaume &amp; Valentia. Entrez la clé d'administration reçue par message.</p>
+  <input type="password" id="key" placeholder="Clé d'administration" autocomplete="current-password">
+  <div class="msg" id="logmsg"></div>
+  <button id="enter">Entrer</button>
+</div>
+
+<!-- ---------- tableau de bord ---------- -->
+<div id="app">
+  <header>
+    <h1>Réponses — Guillaume &amp; Valentia</h1>
+    <span class="sp"></span>
+    <span class="muted" id="maj"></span>
+    <button class="ghost" id="refresh">Rafraîchir</button>
+    <button class="ghost" id="csv">Export CSV</button>
+    <button class="danger" id="reset">Tout effacer</button>
+    <button class="ghost" id="logout">Quitter</button>
+  </header>
+
+  <div class="wrap">
+    <div class="grid">
+      <div class="stat"><b id="f-oui">–</b><span>foyers oui</span></div>
+      <div class="stat"><b id="f-pers">–</b><span>personnes attendues</span></div>
+      <div class="stat"><b id="f-enf">–</b><span>dont enfants</span></div>
+      <div class="stat"><b id="f-non">–</b><span>foyers non</span></div>
+      <div class="stat"><b id="f-tot">–</b><span>réponses reçues</span></div>
+    </div>
+
+    <div class="panel">
+      <h2>Rechercher</h2>
+      <input type="text" id="search" placeholder="Filtrer par nom ou message…">
+    </div>
+
+    <div class="panel">
+      <h2>Liste des réponses</h2>
+      <table>
+        <thead>
+          <tr><th>Nom</th><th>Réponse</th><th>Pers.</th><th class="hide-s">Enf.</th>
+              <th class="hide-s">Message</th><th class="hide-s">Reçu le</th><th></th></tr>
+        </thead>
+        <tbody id="rows"><tr><td colspan="7" class="muted">Chargement…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = "https://toll-spent-financing-innovations.trycloudflare.com";
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let KEY = localStorage.getItem("mariage_admin_key") || "";
+let DATA = [];
+
+function show(t, ok){ const m = $("logmsg"); m.className = "msg " + (ok ? "ok" : "err"); m.textContent = t; }
+function err(t){ const m = $("logmsg"); m.className = "msg err"; m.textContent = t; }
+
+async function api(path, opts){
+  opts = opts || {};
+  opts.headers = Object.assign({"X-Admin-Key": KEY}, opts.headers || {});
+  const r = await fetch(API + path, opts);
+  if (r.status === 401) { throw new Error("401"); }
+  return r;
+}
+
+async function charger(){
+  try {
+    const r = await api("/admin/rsvp");
+    const d = await r.json();
+    DATA = d.rsvp || [];
+    const c = d.counts || {};
+    $("f-oui").textContent  = c.foyers_oui ?? "–";
+    $("f-pers").textContent = c.personnes ?? "–";
+    $("f-enf").textContent  = c.enfants ?? 0;
+    $("f-non").textContent  = c.foyers_non ?? "–";
+    $("f-tot").textContent  = c.total_reponses ?? "–";
+    $("maj").textContent = c.maj ? "maj " + c.maj : "";
+    afficher_liste();
+    $("login").style.display = "none";
+    $("app").style.display = "block";
+    localStorage.setItem("mariage_admin_key", KEY);
+  } catch (e) {
+    $("login").style.display = "block";
+    $("app").style.display = "none";
+    if (e.message === "401") { localStorage.removeItem("mariage_admin_key"); err("Clé refusée. Vérifiez la clé d'administration."); }
+    else err("Service injoignable (" + e.message + "). Réessayez dans un instant.");
+  }
+}
+
+function afficher_liste(){
+  const q = ($("search").value || "").toLowerCase().trim();
+  const list = q ? DATA.filter(r => (r.nom + " " + (r.message||"")).toLowerCase().includes(q)) : DATA;
+  $("rows").innerHTML = list.length ? list.map(r => `
+    <tr>
+      <td><strong>${esc(r.nom)}</strong></td>
+      <td><span class="tag ${r.reponse === "oui" ? "oui" : "non"}">${r.reponse === "oui" ? "présent·e" : "absent·e"}</span></td>
+      <td>${r.reponse === "oui" ? (r.personnes || 1) : "–"}</td>
+      <td class="hide-s">${r.enfants || 0}</td>
+      <td class="hide-s">${esc(r.message || "")}</td>
+      <td class="hide-s">${esc(r.quand || "")}</td>
+      <td class="row-actions"><button class="danger" data-nom="${esc(r.nom)}">Suppr.</button></td>
+    </tr>`).join("")
+    : `<tr><td colspan="7" class="muted">Aucune réponse pour l'instant.</td></tr>`;
+}
+
+$("rows").addEventListener("click", async (e) => {
+  const b = e.target.closest("button[data-nom]");
+  if (!b) return;
+  const nom = b.dataset.nom;
+  if (!confirm("Supprimer la réponse de « " + nom + " » ?")) return;
+  try {
+    const r = await api("/admin/delete", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({nom: nom})
+    });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    await charger(); show("Réponse de « " + nom + " » supprimée.", true);
+  } catch (err2) { err("Suppression impossible : " + err2.message); }
+});
+
+$("csv").onclick = async () => {
+  try {
+    const r = await api("/admin/export.csv");
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const blob = await r.blob();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "reponses-mariage.csv";
+    document.body.appendChild(a); a.click(); a.remove();
+    show("Export CSV téléchargé.", true);
+  } catch (e) { err("Export impossible : " + e.message); }
+};
+
+$("enter").onclick = () => { KEY = $("key").value.trim(); charger(); };
+$("key").addEventListener("keydown", e => { if (e.key === "Enter") $("enter").click(); });
+$("refresh").onclick = () => charger();
+$("search").addEventListener("input", afficher_liste);
+$("logout").onclick = () => { localStorage.removeItem("mariage_admin_key"); KEY = ""; $("key").value = ""; location.reload(); };
+$("reset").onclick = async () => {
+  if (!confirm("Effacer TOUTES les réponses ? Cette action est définitive.")) return;
+  if (!confirm("Vraiment sûr ? Pensez à l'export CSV avant.")) return;
+  try {
+    const r = await api("/admin/reset", {method: "POST"});
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    await charger(); show("Toutes les réponses ont été effacées.", true);
+  } catch (e) { err("Effacement impossible : " + e.message); }
+};
+
+if (KEY) charger(); else $("login").style.display = "block";
+setInterval(() => { if (KEY && document.visibilityState === "visible") charger(); }, 30000);
+</script>
+</body>
+</html>
