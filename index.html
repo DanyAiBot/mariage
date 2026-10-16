@@ -3,8 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Notre mariage</title>
-<meta name="description" content="Le déroulé et les photos de notre mariage.">
+<title>Guillaume &amp; Valentia — notre mariage</title>
+<meta name="description" content="Le faire-part, le déroulé et les photos du mariage de Guillaume & Valentia — 7 juillet 2028.">
+<meta property="og:title" content="Guillaume &amp; Valentia — notre mariage">
+<meta property="og:description" content="Vendredi 7 juillet 2028 — déroulé, photos et confirmation de présence.">
+<meta property="og:image" content="alliances.svg">
+<link rel="icon" href="alliances.svg" type="image/svg+xml">
 <style>
   :root{
     --ink:#2b2523; --ink-soft:#6b5f5a; --cream:#fbf7f2; --card:#ffffff;
@@ -20,16 +24,17 @@
   .wrap{max-width:960px;margin:0 auto;padding:0 20px}
   /* ---------- hero ---------- */
   header.hero{
-    position:relative;text-align:center;padding:96px 20px 72px;
+    position:relative;text-align:center;padding:72px 20px 64px;
     background:linear-gradient(160deg,#fdfaf6 0%,#f4ece2 100%);
     border-bottom:1px solid var(--line);
   }
-  .kicker{font-family:var(--sans);text-transform:uppercase;letter-spacing:.32em;font-size:.7rem;color:var(--gold);margin-bottom:22px}
+  .kicker{font-family:var(--sans);text-transform:uppercase;letter-spacing:.32em;font-size:.7rem;color:var(--gold);margin-bottom:16px}
+  .rings{width:min(340px,72vw);height:auto;margin:0 auto 10px;display:block}
   .hero h1{font-size:clamp(2.4rem,7vw,4.2rem);line-height:1.1}
   .amp{display:block;font-size:.5em;color:var(--gold);margin:6px 0}
-  .date{margin-top:22px;font-family:var(--serif);font-size:1.35rem;color:var(--ink-soft)}
+  .date{margin-top:18px;font-family:var(--serif);font-size:1.35rem;color:var(--ink-soft)}
   .place{margin-top:6px;color:var(--ink-soft);font-size:.95rem}
-  .rule{width:64px;height:1px;background:var(--gold);margin:34px auto;opacity:.6}
+  .rule{width:64px;height:1px;background:var(--gold);margin:28px auto;opacity:.6}
   .countdown{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:8px}
   .cd{background:#fff;border:1px solid var(--line);border-radius:14px;min-width:82px;padding:12px 14px}
   .cd b{display:block;font-family:var(--serif);font-size:1.9rem;line-height:1}
@@ -69,8 +74,29 @@
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
   .card h3{font-size:1.15rem;margin-bottom:6px}
   .card p{margin:.3rem 0;color:var(--ink-soft)}
-  .btn{display:inline-block;margin-top:10px;background:var(--gold);color:#fff;text-decoration:none;padding:11px 20px;border-radius:999px;font-size:.9rem}
+  .btn{display:inline-block;margin-top:10px;background:var(--gold);color:#fff;text-decoration:none;padding:11px 20px;border-radius:999px;font-size:.9rem;border:0;cursor:pointer;font-family:var(--sans)}
+  .btn:disabled{opacity:.5;cursor:default}
   .btn.ghost{background:none;color:var(--gold);border:1px solid var(--gold)}
+  /* ---------- RSVP ---------- */
+  .rsvp{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px}
+  .rsvp-form{display:grid;gap:14px;max-width:460px}
+  .rsvp-form label{font-size:.85rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft)}
+  .rsvp-form input[type=text],.rsvp-form select{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font-size:1rem;font-family:var(--sans);background:var(--cream);color:var(--ink)}
+  .choices{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+  .choice{border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;gap:10px;align-items:center;cursor:pointer;background:var(--cream);font-size:.95rem}
+  .choice input{accent-color:var(--gold);width:18px;height:18px}
+  .choice.sel{border-color:var(--gold);background:#fdf6ea;box-shadow:0 0 0 1px var(--gold) inset}
+  .msg{font-size:.92rem;padding:0;border-radius:10px;display:none}
+  .msg.ok{display:block;padding:10px 14px;background:#eef7ee;color:#2f6b35;border:1px solid #cfe6d1}
+  .msg.err{display:block;padding:10px 14px;background:#fdf0ef;color:#8d3b33;border:1px solid #f0d4d0}
+  .scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:26px}
+  .score{background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center}
+  .score b{display:block;font-family:var(--serif);font-size:2.4rem;line-height:1;color:var(--gold)}
+  .score span{font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;color:var(--ink-soft)}
+  .guestlist{margin-top:18px;font-size:.92rem;color:var(--ink-soft)}
+  .guestlist details{margin-top:8px}
+  .guestlist summary{cursor:pointer;color:var(--gold)}
+  .guestlist ul{margin:8px 0 0;padding-left:18px}
   footer{padding:40px 20px 64px;text-align:center;color:var(--ink-soft);font-size:.85rem}
   footer .heart{color:var(--gold)}
 </style>
@@ -82,26 +108,27 @@
    À MODIFIER — tout le contenu du site est ici.
    ============================================================ */
 const CONFIG = {
-  marie1:   "Prénom",          // ← le premier marié
-  marie2:   "Prénom",          // ← le second marié
-  dateISO:  "2027-06-12T15:00:00",  // ← date + heure (format AAAA-MM-JJTHH:MM:SS)
-  dateTexte:"Samedi 12 juin 2027",
-  lieu:     "Domaine des Oliviers, Aix-en-Provence",
-  adresse:  "Chemin des Oliviers, 13100 Aix-en-Provence",
-  rsvp:     "",                // ← email ou lien de RSVP (vide = bouton masqué)
+  marie1:   "Guillaume",
+  marie2:   "Valentia",
+  dateISO:  "2028-07-07T15:00:00",        /* heure de la cérémonie */
+  dateTexte:"Vendredi 7 juillet 2028",
+  lieu:     "Lieu à préciser",
+  adresse:  "Adresse à préciser",
+  email:    "",                           /* email de contact (vide = masqué) */
 
-  /* Le déroulé de la journée — ajoute/retire des lignes librement */
+  /* Service qui enregistre les réponses (compteur en direct). */
+  api:      "https://toll-spent-financing-innovations.trycloudflare.com",
+
+  /* Le déroulé de la journée */
   programme: [
-    ["15h00", "Cérémonie civile",  "Mairie du 6e — arrivée conseillée 14h40"],
-    ["16h30", "Cérémonie laïque",  "Sous les oliviers, en plein air"],
-    ["18h00", "Cocktail",          "Vins du domaine et buffet méditerranéen"],
-    ["20h30", "Dîner",             "Grande table sous la pergola"],
-    ["23h00", "Bal & soirée",      "DJ jusqu'au bout de la nuit"],
+    ["15h00", "Cérémonie civile",  "Mairie — arrivée conseillée 14h40"],
+    ["16h30", "Cérémonie laïque",  "En plein air"],
+    ["18h00", "Cocktail",          "Vins et buffet"],
+    ["20h30", "Dîner",             "Grande table"],
+    ["23h00", "Bal & soirée",      "Jusqu'au bout de la nuit"],
   ],
 
-  /* Les photos. "src" = chemin du fichier, "legende" = texte au survol.
-     Exemple : {src:"photos/ceremonie.jpg", legende:"La cérémonie"}
-     Envoie-moi les fichiers et je remplis cette liste. */
+  /* Les photos : {src:"photos/ceremonie.jpg", legende:"La cérémonie"} */
   photos: [],
 };
 /* ============================================================ */
@@ -109,6 +136,7 @@ const CONFIG = {
 
 <header class="hero">
   <div class="kicker">Nous nous marions</div>
+  <img class="rings" src="alliances.svg" alt="Deux alliances entrelacées">
   <h1><span id="n1"></span><span class="amp">&amp;</span><span id="n2"></span></h1>
   <div class="rule"></div>
   <div class="date" id="date"></div>
@@ -123,6 +151,56 @@ const CONFIG = {
 </header>
 
 <main>
+  <section class="wrap" id="rsvp-sec">
+    <h2>Serez-vous présent&nbsp;?</h2>
+    <p class="sub">Cochez votre réponse — le compteur se met à jour tout seul.</p>
+
+    <div class="rsvp">
+      <form class="rsvp-form" id="form">
+        <div>
+          <label for="nom">Votre nom</label>
+          <input type="text" id="nom" placeholder="Prénom et nom" autocomplete="name" required>
+        </div>
+        <div>
+          <label>Votre réponse</label>
+          <div class="choices">
+            <label class="choice" id="c-oui">
+              <input type="radio" name="rep" value="oui">
+              <span>Oui, je serai présent·e</span>
+            </label>
+            <label class="choice" id="c-non">
+              <input type="radio" name="rep" value="non">
+              <span>Non, je ne serai pas présent·e</span>
+            </label>
+          </div>
+        </div>
+        <div id="bloc-pers" hidden>
+          <label for="pers">Combien de personnes (vous inclus)</label>
+          <select id="pers">
+            <option>1</option><option>2</option><option>3</option>
+            <option>4</option><option>5</option><option>6</option>
+          </select>
+        </div>
+        <button class="btn" type="submit" id="send">Envoyer ma réponse</button>
+        <div class="msg" id="msg"></div>
+      </form>
+    </div>
+
+    <div class="scores" id="scores" hidden>
+      <div class="score"><b id="s-oui">–</b><span>réponses oui</span></div>
+      <div class="score"><b id="s-pers">–</b><span>personnes attendues</span></div>
+      <div class="score"><b id="s-non">–</b><span>réponses non</span></div>
+    </div>
+    <p class="sub" id="maj" style="margin-top:12px"></p>
+
+    <div class="guestlist" id="guestlist" hidden>
+      <details>
+        <summary>Voir la liste des réponses</summary>
+        <ul id="liste"></ul>
+      </details>
+    </div>
+  </section>
+
   <section class="wrap" id="programme">
     <h2>Le déroulé</h2>
     <p class="sub">La journée, heure par heure.</p>
@@ -147,24 +225,24 @@ const CONFIG = {
     <p class="sub">Ce qu’il faut savoir avant de venir.</p>
     <div class="cards">
       <div class="card">
-        <h3>Confirmer sa présence</h3>
-        <p id="rsvptxt">Merci de répondre avant le 30 avril.</p>
-        <a class="btn" id="rsvp" href="#" hidden>Je confirme</a>
+        <h3>Répondre avant le</h3>
+        <p>Merci de confirmer votre présence avant le 30 avril 2028.</p>
+        <a class="btn" href="#rsvp-sec">Aller au formulaire</a>
       </div>
       <div class="card">
         <h3>Tenue</h3>
         <p>Élégante mais libre. Prévoir des chaussures qui supportent l’herbe.</p>
       </div>
       <div class="card">
-        <h3>Accès</h3>
-        <p id="acces"></p>
+        <h3>Contact</h3>
+        <p id="contact">Une question ? Écrivez-nous.</p>
       </div>
     </div>
   </section>
 </main>
 
 <footer>
-  Réalisé avec <span class="heart">♥</span> — fait main, page unique, aucune donnée collectée.
+  Guillaume &amp; Valentia — 7 juillet 2028 · réalisé avec <span class="heart">♥</span>
 </footer>
 
 <div class="lb" id="lb" role="dialog" aria-modal="true">
@@ -176,7 +254,7 @@ const CONFIG = {
 
 <script>
 const $ = (id) => document.getElementById(id);
-const esc = (s) => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const esc = (s) => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
 /* --- textes --- */
 document.title = `${CONFIG.marie1} & ${CONFIG.marie2} — notre mariage`;
@@ -185,15 +263,12 @@ $("n2").textContent = CONFIG.marie2;
 $("date").textContent = CONFIG.dateTexte;
 $("place").textContent = CONFIG.lieu;
 $("adresse").textContent = CONFIG.adresse;
-$("acces").textContent = CONFIG.adresse;
 $("maps").href = "https://www.openstreetmap.org/search?query=" + encodeURIComponent(CONFIG.adresse);
+if (CONFIG.email) $("contact").innerHTML = '<a href="mailto:' + esc(CONFIG.email) + '">' + esc(CONFIG.email) + '</a>';
 
 /* --- déroulé --- */
 $("timeline").innerHTML = CONFIG.programme.map(([h,t,d]) =>
-  `<li><time>${esc(h)}</time><div><strong>${esc(t)}</strong><small>${esc(d)}</small></div></li>`).join("");
-
-/* --- RSVP --- */
-if (CONFIG.rsvp) { const a = $("rsvp"); a.href = CONFIG.rsvp; a.hidden = false; }
+  '<li><time>' + esc(h) + '</time><div><strong>' + esc(t) + '</strong><small>' + esc(d) + '</small></div></li>').join("");
 
 /* --- compte à rebours --- */
 const target = new Date(CONFIG.dateISO).getTime();
@@ -201,8 +276,8 @@ const pad = n => String(n).padStart(2, "0");
 function tick(){
   const left = target - Date.now();
   if (isNaN(target)) return;
-  if (left <= 0) { $("cd").innerHTML = '<div class="cd"><b>Le grand jour est arrivé</b></div>'; $("cd").hidden = false; return; }
   $("cd").hidden = false;
+  if (left <= 0) { $("cd").innerHTML = '<div class="cd"><b>Le grand jour&nbsp;!</b></div>'; return; }
   $("d").textContent = Math.floor(left / 864e5);
   $("h").textContent = Math.floor(left / 36e5) % 24;
   $("m").textContent = Math.floor(left / 6e4) % 60;
@@ -212,10 +287,10 @@ tick(); setInterval(tick, 1000);
 
 /* --- galerie + lightbox --- */
 const ph = CONFIG.photos || [];
-if (!ph.length) { $("empty").hidden = false; }
+if (!ph.length) $("empty").hidden = false;
 $("gallery").innerHTML = ph.map((p, i) =>
-  `<figure data-i="${i}"><img loading="lazy" src="${esc(p.src)}" alt="${esc(p.legende||"")}">
-   ${p.legende ? `<figcaption>${esc(p.legende)}</figcaption>` : ""}</figure>`).join("");
+  '<figure data-i="' + i + '"><img loading="lazy" src="' + esc(p.src) + '" alt="' + esc(p.legende||"") + '">' +
+  (p.legende ? '<figcaption>' + esc(p.legende) + '</figcaption>' : "") + '</figure>').join("");
 
 let cur = 0;
 const lb = $("lb"), lbi = $("lbi");
@@ -230,6 +305,72 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape") lb.classList.remove("open");
   if (e.key === "ArrowLeft") show(cur - 1);
   if (e.key === "ArrowRight") show(cur + 1);
+});
+
+/* --- RSVP --- */
+const form = $("form"), msg = $("msg");
+form.addEventListener("change", () => {
+  const v = (form.querySelector('input[name=rep]:checked') || {}).value;
+  $("c-oui").classList.toggle("sel", v === "oui");
+  $("c-non").classList.toggle("sel", v === "non");
+  $("bloc-pers").hidden = v !== "oui";
+});
+
+function afficher(d){
+  const c = d.counts || {};
+  $("s-oui").textContent  = (c.foyers_oui === undefined ? "–" : c.foyers_oui);
+  $("s-pers").textContent = (c.personnes === undefined ? "–" : c.personnes);
+  $("s-non").textContent  = (c.foyers_non === undefined ? "–" : c.foyers_non);
+  $("scores").hidden = false;
+  $("maj").textContent = c.maj ? "Dernière réponse enregistrée : " + c.maj : "";
+  const list = d.rsvp || [];
+  if (list.length) {
+    $("guestlist").hidden = false;
+    $("liste").innerHTML = list.map(r => '<li><strong>' + esc(r.nom) + '</strong> — ' +
+      (r.reponse === "oui" ? ("présent·e (" + r.personnes + " pers.)") : "ne sera pas là") + '</li>').join("");
+  }
+}
+
+function erreur(t){ msg.className = "msg err"; msg.textContent = t; }
+
+async function charger(){
+  try {
+    const r = await fetch(CONFIG.api + "/rsvp", {cache: "no-store"});
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    afficher(await r.json());
+  } catch (e) {
+    $("scores").hidden = true;
+    $("maj").innerHTML = "Le compteur en direct est momentanément indisponible — vous pouvez quand même envoyer votre réponse d'ici un instant.";
+  }
+}
+charger();
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const nom = $("nom").value.trim();
+  const rep = (form.querySelector('input[name=rep]:checked') || {}).value;
+  if (!nom) return erreur("Merci d'indiquer votre nom.");
+  if (!rep) return erreur("Merci de cocher « oui » ou « non ».");
+  const pers = rep === "oui" ? parseInt($("pers").value, 10) : 1;
+  $("send").disabled = true; $("send").textContent = "Envoi…";
+  try {
+    const r = await fetch(CONFIG.api + "/rsvp", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({nom: nom, reponse: rep, personnes: pers})
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || "Erreur");
+    msg.className = "msg ok";
+    msg.textContent = rep === "oui"
+      ? ("Merci " + nom + " ! Votre présence est enregistrée pour " + pers + " personne(s).")
+      : ("Merci " + nom + ", votre réponse a été enregistrée. Vous nous manquerez !");
+    afficher(d);
+  } catch (err) {
+    erreur("Envoi impossible pour l'instant (" + err.message + "). Réessayez dans un moment ou prévenez-nous directement.");
+  } finally {
+    $("send").disabled = false; $("send").textContent = "Envoyer ma réponse";
+  }
 });
 </script>
 </body>
