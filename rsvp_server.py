@@ -1,24 +1,29 @@
 #!/usr/bin/env python3
-"""Service RSVP + administration pour la page de mariage de Guillaume & Valentia.
+"""Service pour la page de mariage de Guillaume & Valentia.
 
-Public (aucune clé) :
-  GET  /rsvp              -> {"counts":{...}}            compteurs seulement
+Public (sans clé) :
+  GET  /rsvp              -> {"counts":{...}}          compteurs seulement
   POST /rsvp              -> {"nom","reponse","personnes","enfants","message"}
+  GET  /contenu           -> copie du contenu du site (secours)
 
 Administration (en-tête X-Admin-Key) :
-  GET  /admin/rsvp        -> liste complète + compteurs
+  GET  /admin/rsvp        -> réponses complètes + compteurs
   GET  /admin/export.csv  -> export tableur
-  POST /admin/delete      -> {"nom":"..."} supprime une réponse
-  POST /admin/reset       -> remet le compteur à zéro
+  POST /admin/delete      -> {"nom": "..."}    supprime une réponse
+  POST /admin/reset       -> vide les réponses
+  GET  /admin/contenu     -> contenu actuel du site
+  POST /admin/contenu     -> enregistre le contenu (noms, date, lieu, déroulé, photos)
+  POST /admin/photo       -> {"nom":"...","data":"<base64>"} ajoute une photo
 
-La clé d'administration est dans .admin_key (à côté du script, jamais publiée).
-Chaque écriture pousse aussi rsvp.json vers le dépôt GitHub (copie durable).
+Chaque écriture est poussée vers le dépôt GitHub (copie durable).
 """
-import json, os, subprocess, threading, re, secrets, csv, io, datetime
+import json, os, subprocess, threading, re, secrets, csv, io, datetime, base64
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "rsvp.json")
+CONT = os.path.join(HERE, "contenu.json")
+PHOTOS = os.path.join(HERE, "photos")
 KEYF = os.path.join(HERE, ".admin_key")
 PORT = int(os.environ.get("RSVP_PORT", "8765"))
 LOCK = threading.Lock()
@@ -35,22 +40,30 @@ CORS = {
     "Cache-Control": "no-store",
 }
 
+CHAMPS_TEXTE = ["marie1", "marie2", "dateISO", "dateTexte", "lieu", "adresse",
+                "email", "rsvpAvant", "kicker"]
 
-def load():
+
+def lire_json(path, defaut):
     try:
-        with open(DATA, encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             d = json.load(f)
-            if not isinstance(d, dict):
-                raise ValueError
-            d.setdefault("rsvp", [])
-            return d
+        return d if isinstance(d, (dict, list)) else defaut
     except Exception:
-        return {"rsvp": [], "maj": None}
+        return defaut
 
 
-def save(d):
-    with open(DATA, "w", encoding="utf-8") as f:
-        json.dump(d, f, ensure_ascii=False, indent=2)
+def ecrire_json(path, obj):
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(obj, f, ensure_ascii=False, indent=2)
+
+
+def load_rsvp():
+    d = lire_json(DATA, {"rsvp": [], "maj": None})
+    if not isinstance(d, dict):
+        d = {"rsvp": [], "maj": None}
+    d.setdefault("rsvp", [])
+    return d
 
 
 def counts(d):
@@ -66,20 +79,40 @@ def counts(d):
     }
 
 
-def push_repo():
+def push_repo(message="mise à jour"):
     env = dict(os.environ, HOME="/opt/data/home",
                HTTPS_PROXY="http://127.0.0.1:8888", HTTP_PROXY="http://127.0.0.1:8888")
 
     def run():
         try:
-            subprocess.run(["git", "add", "rsvp.json"], cwd=HERE, env=env, timeout=60)
+            subprocess.run(["git", "add", "-A"], cwd=HERE, env=env, timeout=90)
             subprocess.run(["git", "-c", "user.email=bot@local", "-c", "user.name=DanyAiBot",
-                            "commit", "-qm", "rsvp: mise à jour"], cwd=HERE, env=env, timeout=60)
-            subprocess.run(["git", "push", "-q", "origin", "main"], cwd=HERE, env=env, timeout=120)
+                            "commit", "-qm", message], cwd=HERE, env=env, timeout=60)
+            subprocess.run(["git", "push", "-q", "origin", "main"], cwd=HERE, env=env, timeout=180)
         except Exception as e:
             print("push repo échoué:", e, flush=True)
 
     threading.Thread(target=run, daemon=True).start()
+
+
+def nettoyer_contenu(src):
+    """Garde uniquement les champs connus, bornés : rien d'autre n'est publié."""
+    if not isinstance(src, dict):
+        return None
+    c = {}
+    for k in CHAMPS_TEXTE:
+        c[k] = re.sub(r"\s+", " ", str(src.get(k) or "")).strip()[:200]
+    prog = []
+    for ligne in (src.get("programme") or [])[:24]:
+        if isinstance(ligne, (list, tuple)) and len(ligne) >= 2:
+            prog.append([str(ligne[0])[:12], str(ligne[1])[:80], str(ligne[2] if len(ligne) > 2 else "")[:160]])
+    c["programme"] = prog
+    photos = []
+    for p in (src.get("photos") or [])[:80]:
+        if isinstance(p, dict) and str(p.get("src", "")).startswith("photos/"):
+            photos.append({"src": str(p["src"])[:200], "legende": str(p.get("legende") or "")[:120]})
+    c["photos"] = photos
+    return c
 
 
 class H(BaseHTTPRequestHandler):
@@ -97,7 +130,7 @@ class H(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    def _is_admin(self):
+    def _admin(self):
         return self.headers.get("X-Admin-Key", "").strip() == ADMIN_KEY
 
     def _body(self):
@@ -110,23 +143,27 @@ class H(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         self._send(204, b"")
 
+    # ---------------- lecture ----------------
     def do_GET(self):
         p = self.path.split("?")[0].rstrip("/") or "/"
         if p == "/health":
             return self._send(200, {"ok": True})
-
-        if p == "/rsvp":                      # public : compteurs seulement
+        if p == "/rsvp":
             with LOCK:
-                d = load()
+                d = load_rsvp()
             return self._send(200, {"counts": counts(d)})
+        if p == "/contenu":
+            return self._send(200, lire_json(CONT, {}))
 
         if p.startswith("/admin"):
-            if not self._is_admin():
+            if not self._admin():
                 return self._send(401, {"error": "Clé d'administration invalide."})
             with LOCK:
-                d = load()
+                d = load_rsvp()
             if p == "/admin/rsvp":
                 return self._send(200, {"rsvp": d["rsvp"], "counts": counts(d)})
+            if p == "/admin/contenu":
+                return self._send(200, lire_json(CONT, {}))
             if p == "/admin/export.csv":
                 buf = io.StringIO()
                 w = csv.writer(buf, delimiter=";")
@@ -141,10 +178,11 @@ class H(BaseHTTPRequestHandler):
 
         self._send(404, {"error": "not found"})
 
+    # ---------------- écritures ----------------
     def do_POST(self):
         p = self.path.split("?")[0].rstrip("/") or "/"
 
-        if p == "/rsvp":                      # réponse d'un invité
+        if p == "/rsvp":
             payload = self._body()
             if payload is None:
                 return self._send(400, {"error": "JSON invalide"})
@@ -164,41 +202,74 @@ class H(BaseHTTPRequestHandler):
             if rep not in ("oui", "non"):
                 return self._send(400, {"error": "Réponse invalide."})
             with LOCK:
-                d = load()
+                d = load_rsvp()
                 d["rsvp"] = [r for r in d["rsvp"] if r.get("nom", "").lower() != nom.lower()]
-                d["rsvp"].append({
-                    "nom": nom, "reponse": rep,
-                    "personnes": pers if rep == "oui" else 0,
-                    "enfants": enf if rep == "oui" else 0,
-                    "message": msg,
-                    "quand": datetime.datetime.now().strftime("%d/%m/%Y %H:%M"),
-                })
+                d["rsvp"].append({"nom": nom, "reponse": rep,
+                                  "personnes": pers if rep == "oui" else 0,
+                                  "enfants": enf if rep == "oui" else 0,
+                                  "message": msg,
+                                  "quand": datetime.datetime.now().strftime("%d/%m/%Y %H:%M")})
                 d["rsvp"].sort(key=lambda r: r.get("nom", "").lower())
                 d["maj"] = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
-                save(d)
+                ecrire_json(DATA, d)
                 c = counts(d)
-            push_repo()
+            push_repo("rsvp: mise à jour")
             return self._send(200, {"ok": True, "counts": c})
 
         if p.startswith("/admin"):
-            if not self._is_admin():
+            if not self._admin():
                 return self._send(401, {"error": "Clé d'administration invalide."})
             payload = self._body() or {}
+
             if p == "/admin/delete":
                 nom = str(payload.get("nom") or "").strip().lower()
                 with LOCK:
-                    d = load()
+                    d = load_rsvp()
                     d["rsvp"] = [r for r in d["rsvp"] if r.get("nom", "").lower() != nom]
                     d["maj"] = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
-                    save(d)
+                    ecrire_json(DATA, d)
                     c = counts(d)
-                push_repo()
+                push_repo("rsvp: suppression d'une réponse")
                 return self._send(200, {"ok": True, "counts": c})
+
             if p == "/admin/reset":
                 with LOCK:
-                    save({"rsvp": [], "maj": None})
-                push_repo()
-                return self._send(200, {"ok": True, "counts": counts({"rsvp": [], "maj": None})})
+                    ecrire_json(DATA, {"rsvp": [], "maj": None})
+                push_repo("rsvp: remise à zéro")
+                return self._send(200, {"ok": True, "counts": counts({"rsvp": []})})
+
+            if p == "/admin/contenu":
+                c = nettoyer_contenu(payload.get("contenu") if "contenu" in payload else payload)
+                if c is None:
+                    return self._send(400, {"error": "Contenu invalide."})
+                if not c["marie1"] or not c["marie2"]:
+                    return self._send(400, {"error": "Les deux prénoms sont nécessaires."})
+                with LOCK:
+                    ecrire_json(CONT, c)
+                push_repo("contenu du site: mise à jour")
+                return self._send(200, {"ok": True, "contenu": c})
+
+            if p == "/admin/photo":
+                nom = re.sub(r"[^a-zA-Z0-9._-]", "-", str(payload.get("nom") or "photo.jpg"))[:80]
+                if "." not in nom:
+                    nom += ".jpg"
+                data = str(payload.get("data") or "")
+                if "," in data[:80] and data.strip().startswith("data:"):
+                    data = data.split(",", 1)[1]
+                try:
+                    brut = base64.b64decode(data, validate=False)
+                except Exception:
+                    return self._send(400, {"error": "Image illisible."})
+                if not brut or len(brut) > 8 * 1024 * 1024:
+                    return self._send(400, {"error": "Image vide ou trop lourde (max 8 Mo)."})
+                os.makedirs(PHOTOS, exist_ok=True)
+                horo = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+                nom = horo + "-" + nom
+                with open(os.path.join(PHOTOS, nom), "wb") as f:
+                    f.write(brut)
+                push_repo("photos: ajout de " + nom)
+                return self._send(200, {"ok": True, "src": "photos/" + nom})
+
             return self._send(404, {"error": "not found"})
 
         self._send(404, {"error": "not found"})
@@ -209,6 +280,5 @@ class H(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     srv = ThreadingHTTPServer(("0.0.0.0", PORT), H)
-    print(f"RSVP prêt sur :{PORT} -> {DATA}", flush=True)
-    print(f"cle admin dans {KEYF}", flush=True)
+    print(f"service prêt sur :{PORT}", flush=True)
     srv.serve_forever()

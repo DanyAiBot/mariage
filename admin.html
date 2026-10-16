@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>Administration — réponses au mariage</title>
+<title>Administration — mariage</title>
 <style>
   :root{
     --ink:#2b2523; --ink-soft:#6b5f5a; --cream:#fbf7f2; --card:#fff;
@@ -13,62 +13,73 @@
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.55}
-  header{background:#fff;border-bottom:1px solid var(--line);padding:16px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
-  header h1{font-size:1.05rem;margin:0;letter-spacing:.02em}
+  header{background:#fff;border-bottom:1px solid var(--line);padding:14px 22px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
+  header h1{font-size:1.02rem;margin:0;letter-spacing:.02em}
   header .sp{flex:1}
-  .wrap{max-width:1060px;margin:0 auto;padding:24px 20px 60px}
+  .tabs{display:flex;gap:8px;margin-left:6px}
+  .tab{background:none;border:1px solid var(--line);color:var(--ink-soft);border-radius:999px;padding:7px 14px;font-size:.84rem;cursor:pointer}
+  .tab.on{background:var(--gold);border-color:var(--gold);color:#fff}
+  .wrap{max-width:1060px;margin:0 auto;padding:22px 20px 60px}
   button,.btn{background:var(--gold);color:#fff;border:0;border-radius:999px;padding:9px 16px;font-size:.86rem;cursor:pointer;font-family:var(--sans);text-decoration:none;display:inline-block}
   button.ghost,.btn.ghost{background:none;color:var(--gold);border:1px solid var(--gold)}
   button.danger{background:none;color:var(--ko);border:1px solid #f0d4d0}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:26px}
+  button:disabled{opacity:.5;cursor:default}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px}
   .stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
-  .stat b{display:block;font-size:2.2rem;line-height:1.1;color:var(--gold)}
+  .stat b{display:block;font-size:2.1rem;line-height:1.1;color:var(--gold)}
   .stat span{font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;color:var(--ink-soft)}
-  .panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:22px}
-  .panel h2{font-size:1rem;margin:0 0 12px;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft)}
-  input[type=text],input[type=password]{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;font-size:1rem;background:var(--cream);color:var(--ink);font-family:var(--sans)}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:20px}
+  .panel h2{font-size:.86rem;margin:0 0 14px;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft)}
+  label{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);margin:12px 0 5px}
+  input[type=text],input[type=password],input[type=datetime-local],textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;font-size:.98rem;background:var(--cream);color:var(--ink);font-family:var(--sans)}
+  textarea{min-height:130px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88rem}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
   table{width:100%;border-collapse:collapse;font-size:.92rem}
   th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
   th{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft);font-weight:600}
   .tag{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.78rem;border:1px solid}
   .tag.oui{color:var(--ok);border-color:#cfe6d1;background:#eef7ee}
   .tag.non{color:var(--ko);border-color:#f0d4d0;background:#fdf0ef}
-  .row-actions{white-space:nowrap}
-  .msg{margin:12px 0;padding:10px 14px;border-radius:10px;font-size:.9rem;display:none}
-  .msg.err{display:block;background:#fdf0ef;color:var(--ko);border:1px solid #f0d4d0}
-  .msg.ok{display:block;background:#eef7ee;color:var(--ok);border:1px solid #cfe6d1}
+  .msg{margin:12px 0;padding:0;border-radius:10px;font-size:.9rem;display:none}
+  .msg.err{display:block;padding:10px 14px;background:#fdf0ef;color:var(--ko);border:1px solid #f0d4d0}
+  .msg.ok{display:block;padding:10px 14px;background:#eef7ee;color:var(--ok);border:1px solid #cfe6d1}
   .muted{color:var(--ink-soft);font-size:.88rem}
-  #app{display:none}
-  .login{max-width:420px;margin:60px auto;background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px}
+  .login{max-width:430px;margin:60px auto;background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px}
   .login h1{font-size:1.2rem;margin:0 0 6px}
   .login button{width:100%;margin-top:14px}
-  @media (max-width:640px){ .hide-s{display:none} }
+  .vignettes{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+  .vign{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--cream)}
+  .vign img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;display:block;margin-bottom:8px}
+  .barre{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+  .aide{font-size:.82rem;color:var(--ink-soft);margin:6px 0 0}
+  @media (max-width:640px){ .hide-s{display:none} .cols{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
 
-<!-- ---------- connexion ---------- -->
 <div class="login" id="login">
   <h1>Administration</h1>
-  <p class="muted">Réponses au mariage de Guillaume &amp; Valentia. Entrez la clé d'administration reçue par message.</p>
+  <p class="muted">Réponses et contenu du site du mariage de Guillaume &amp; Valentia. Entrez la clé d'administration.</p>
   <input type="password" id="key" placeholder="Clé d'administration" autocomplete="current-password">
   <div class="msg" id="logmsg"></div>
   <button id="enter">Entrer</button>
 </div>
 
-<!-- ---------- tableau de bord ---------- -->
-<div id="app">
+<div id="app" style="display:none">
   <header>
-    <h1>Réponses — Guillaume &amp; Valentia</h1>
+    <h1>Mariage — administration</h1>
+    <div class="tabs">
+      <button class="tab on" id="t-rep">Réponses</button>
+      <button class="tab" id="t-con">Contenu du site</button>
+    </div>
     <span class="sp"></span>
     <span class="muted" id="maj"></span>
     <button class="ghost" id="refresh">Rafraîchir</button>
-    <button class="ghost" id="csv">Export CSV</button>
-    <button class="danger" id="reset">Tout effacer</button>
     <button class="ghost" id="logout">Quitter</button>
   </header>
 
-  <div class="wrap">
+  <!-- ============ RÉPONSES ============ -->
+  <div class="wrap" id="v-rep">
     <div class="grid">
       <div class="stat"><b id="f-oui">–</b><span>foyers oui</span></div>
       <div class="stat"><b id="f-pers">–</b><span>personnes attendues</span></div>
@@ -80,6 +91,10 @@
     <div class="panel">
       <h2>Rechercher</h2>
       <input type="text" id="search" placeholder="Filtrer par nom ou message…">
+      <div class="barre">
+        <button class="ghost" id="csv">Export CSV</button>
+        <button class="danger" id="reset">Effacer toutes les réponses</button>
+      </div>
     </div>
 
     <div class="panel">
@@ -93,29 +108,91 @@
       </table>
     </div>
   </div>
+
+  <!-- ============ CONTENU ============ -->
+  <div class="wrap" id="v-con" style="display:none">
+    <div class="panel">
+      <h2>Les mariés et la date</h2>
+      <div class="cols">
+        <div><label for="kicker">Petite phrase au-dessus des prénoms</label><input type="text" id="kicker"></div>
+        <div><label for="rsvpAvant">Réponse souhaitée avant le</label><input type="text" id="rsvpAvant"></div>
+        <div><label for="marie1">Premier prénom</label><input type="text" id="marie1"></div>
+        <div><label for="marie2">Second prénom</label><input type="text" id="marie2"></div>
+        <div><label for="dateTexte">Date affichée</label><input type="text" id="dateTexte"></div>
+        <div><label for="dateISO">Date et heure de la cérémonie (compte à rebours)</label><input type="datetime-local" id="dateISO"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Le lieu et le contact</h2>
+      <div class="cols">
+        <div><label for="lieu">Nom du lieu</label><input type="text" id="lieu"></div>
+        <div><label for="adresse">Adresse complète (carte)</label><input type="text" id="adresse"></div>
+        <div><label for="email">Email de contact (vide = masqué)</label><input type="text" id="email"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Le déroulé</h2>
+      <p class="aide">Une ligne par étape, au format <code>heure | titre | détail</code>. Exemple :<br>
+        <code>15h00 | Cérémonie civile | Mairie — arrivée conseillée 14h40</code></p>
+      <textarea id="programme" spellcheck="false"></textarea>
+    </div>
+
+    <div class="panel">
+      <h2>Les photos</h2>
+      <p class="aide">Ajoutez vos images (max 8 Mo chacune), donnez-leur une légende, puis Enregistrer. Elles sont publiées dans la galerie du site.</p>
+      <div class="vignettes" id="vignettes"></div>
+      <div class="barre">
+        <input type="file" id="fichiers" accept="image/*" multiple>
+        <button id="envoyer-photos">Ajouter ces photos</button>
+      </div>
+      <div class="msg" id="msg-photos"></div>
+    </div>
+
+    <div class="barre">
+      <button id="save">Enregistrer le contenu</button>
+      <button class="ghost" id="reload">Recharger</button>
+      <a class="btn ghost" href="https://danyaibot.github.io/mariage/" target="_blank" rel="noopener">Voir le site</a>
+    </div>
+    <div class="msg" id="msg-con"></div>
+    <p class="muted">Après l'enregistrement, GitHub Pages republie le site en une minute environ.</p>
+  </div>
 </div>
 
 <script>
 const API = "https://toll-spent-financing-innovations.trycloudflare.com";
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-/* La clé peut arriver par le lien : admin.html#k=<clé> (le fragment n'est jamais
-   envoyé au serveur ni journalisé). Elle est alors mémorisée puis retirée de l'URL. */
+
 const depuis_lien = (location.hash.match(/[#&]?k=([^&]+)/) || [])[1];
 let KEY = depuis_lien ? decodeURIComponent(depuis_lien) : (localStorage.getItem("mariage_admin_key") || "");
 let DATA = [];
+let PHOTOS = [];
 
 function show(t, ok){ const m = $("logmsg"); m.className = "msg " + (ok ? "ok" : "err"); m.textContent = t; }
-function err(t){ const m = $("logmsg"); m.className = "msg err"; m.textContent = t; }
+function dire(id, t, ok){ const m = $(id); m.className = "msg " + (ok ? "ok" : "err"); m.textContent = t; }
 
 async function api(path, opts){
   opts = opts || {};
   opts.headers = Object.assign({"X-Admin-Key": KEY}, opts.headers || {});
   const r = await fetch(API + path, opts);
-  if (r.status === 401) { throw new Error("401"); }
+  if (r.status === 401) throw new Error("401");
   return r;
 }
 
+/* ---------------- onglets ---------------- */
+function onglet(rep){
+  $("v-rep").style.display = rep ? "block" : "none";
+  $("v-con").style.display = rep ? "none" : "block";
+  $("t-rep").classList.toggle("on", rep);
+  $("t-con").classList.toggle("on", !rep);
+  if (!rep) charger_contenu();
+}
+$("t-rep").onclick = () => onglet(true);
+$("t-con").onclick = () => onglet(false);
+
+/* ---------------- réponses ---------------- */
 async function charger(){
   try {
     const r = await api("/admin/rsvp");
@@ -132,18 +209,18 @@ async function charger(){
     $("login").style.display = "none";
     $("app").style.display = "block";
     localStorage.setItem("mariage_admin_key", KEY);
-    if (location.hash) history.replaceState(null, "", location.pathname);   /* la clé ne reste pas dans l'URL/ l'historique */
+    if (location.hash) history.replaceState(null, "", location.pathname);
   } catch (e) {
     $("login").style.display = "block";
     $("app").style.display = "none";
-    if (e.message === "401") { localStorage.removeItem("mariage_admin_key"); err("Clé refusée. Vérifiez la clé d'administration."); }
-    else err("Service injoignable (" + e.message + "). Réessayez dans un instant.");
+    if (e.message === "401") { localStorage.removeItem("mariage_admin_key"); show("Clé refusée. Vérifiez la clé d'administration.", false); }
+    else show("Service injoignable (" + e.message + "). Réessayez dans un instant.", false);
   }
 }
 
 function afficher_liste(){
   const q = ($("search").value || "").toLowerCase().trim();
-  const list = q ? DATA.filter(r => (r.nom + " " + (r.message||"")).toLowerCase().includes(q)) : DATA;
+  const list = q ? DATA.filter(r => (r.nom + " " + (r.message || "")).toLowerCase().includes(q)) : DATA;
   $("rows").innerHTML = list.length ? list.map(r => `
     <tr>
       <td><strong>${esc(r.nom)}</strong></td>
@@ -152,7 +229,7 @@ function afficher_liste(){
       <td class="hide-s">${r.enfants || 0}</td>
       <td class="hide-s">${esc(r.message || "")}</td>
       <td class="hide-s">${esc(r.quand || "")}</td>
-      <td class="row-actions"><button class="danger" data-nom="${esc(r.nom)}">Suppr.</button></td>
+      <td><button class="danger" data-nom="${esc(r.nom)}">Suppr.</button></td>
     </tr>`).join("")
     : `<tr><td colspan="7" class="muted">Aucune réponse pour l'instant.</td></tr>`;
 }
@@ -163,45 +240,149 @@ $("rows").addEventListener("click", async (e) => {
   const nom = b.dataset.nom;
   if (!confirm("Supprimer la réponse de « " + nom + " » ?")) return;
   try {
-    const r = await api("/admin/delete", {
-      method: "POST", headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({nom: nom})
-    });
+    const r = await api("/admin/delete", {method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({nom: nom})});
     if (!r.ok) throw new Error("HTTP " + r.status);
     await charger(); show("Réponse de « " + nom + " » supprimée.", true);
-  } catch (err2) { err("Suppression impossible : " + err2.message); }
+  } catch (err) { show("Suppression impossible : " + err.message, false); }
 });
 
+$("refresh").onclick = () => charger();
+$("search").addEventListener("input", afficher_liste);
+$("logout").onclick = () => { localStorage.removeItem("mariage_admin_key"); location.href = location.pathname; };
 $("csv").onclick = async () => {
   try {
     const r = await api("/admin/export.csv");
     if (!r.ok) throw new Error("HTTP " + r.status);
     const blob = await r.blob();
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "reponses-mariage.csv";
+    a.href = URL.createObjectURL(blob); a.download = "reponses-mariage.csv";
     document.body.appendChild(a); a.click(); a.remove();
     show("Export CSV téléchargé.", true);
-  } catch (e) { err("Export impossible : " + e.message); }
+  } catch (e) { show("Export impossible : " + e.message, false); }
 };
-
-$("enter").onclick = () => { KEY = $("key").value.trim(); charger(); };
-$("key").addEventListener("keydown", e => { if (e.key === "Enter") $("enter").click(); });
-$("refresh").onclick = () => charger();
-$("search").addEventListener("input", afficher_liste);
-$("logout").onclick = () => { localStorage.removeItem("mariage_admin_key"); KEY = ""; $("key").value = ""; location.reload(); };
 $("reset").onclick = async () => {
-  if (!confirm("Effacer TOUTES les réponses ? Cette action est définitive.")) return;
+  if (!confirm("Effacer TOUTES les réponses ? Action définitive.")) return;
   if (!confirm("Vraiment sûr ? Pensez à l'export CSV avant.")) return;
   try {
     const r = await api("/admin/reset", {method: "POST"});
     if (!r.ok) throw new Error("HTTP " + r.status);
     await charger(); show("Toutes les réponses ont été effacées.", true);
-  } catch (e) { err("Effacement impossible : " + e.message); }
+  } catch (e) { show("Effacement impossible : " + e.message, false); }
+};
+
+/* ---------------- contenu ---------------- */
+function remplir_formulaire(c){
+  $("kicker").value   = c.kicker || "";
+  $("marie1").value   = c.marie1 || "";
+  $("marie2").value   = c.marie2 || "";
+  $("dateTexte").value= c.dateTexte || "";
+  $("dateISO").value  = (c.dateISO || "").slice(0, 16);
+  $("lieu").value     = c.lieu || "";
+  $("adresse").value  = c.adresse || "";
+  $("email").value    = c.email || "";
+  $("rsvpAvant").value= c.rsvpAvant || "";
+  $("programme").value = (c.programme || []).map(l => [l[0] || "", l[1] || "", l[2] || ""].join(" | ")).join("\n");
+  PHOTOS = (c.photos || []).map(p => ({src: p.src, legende: p.legende || ""}));
+  afficher_vignettes();
+}
+
+function afficher_vignettes(){
+  $("vignettes").innerHTML = PHOTOS.length ? PHOTOS.map((p, i) => `
+    <div class="vign">
+      <img src="${esc(p.src)}" alt="">
+      <input type="text" data-leg="${i}" value="${esc(p.legende)}" placeholder="Légende">
+      <button class="danger" data-del="${i}" style="margin-top:8px">Retirer</button>
+    </div>`).join("") : '<p class="muted">Aucune photo pour l\'instant.</p>';
+}
+
+$("vignettes").addEventListener("input", (e) => {
+  const i = e.target.dataset.leg;
+  if (i !== undefined) PHOTOS[+i].legende = e.target.value;
+});
+$("vignettes").addEventListener("click", (e) => {
+  const i = e.target.dataset.del;
+  if (i === undefined) return;
+  if (!confirm("Retirer cette photo de la galerie ?")) return;
+  PHOTOS.splice(+i, 1);
+  afficher_vignettes();
+});
+
+async function charger_contenu(){
+  try {
+    const r = await api("/admin/contenu");
+    remplir_formulaire(await r.json());
+    dire("msg-con", "", true);
+  } catch (e) { dire("msg-con", "Contenu illisible : " + e.message, false); }
+}
+
+$("reload").onclick = () => charger_contenu();
+
+$("envoyer-photos").onclick = async () => {
+  const fichiers = Array.from($("fichiers").files || []);
+  if (!fichiers.length) return dire("msg-photos", "Choisissez d'abord des images.", false);
+  $("envoyer-photos").disabled = true;
+  let n = 0;
+  for (const f of fichiers) {
+    try {
+      const data = await new Promise((res, rej) => {
+        const fr = new FileReader();
+        fr.onload = () => res(String(fr.result).split(",")[1]);
+        fr.onerror = rej;
+        fr.readAsDataURL(f);
+      });
+      const r = await api("/admin/photo", {method: "POST", headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({nom: f.name, data: data})});
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || "Erreur");
+      PHOTOS.push({src: d.src, legende: ""});
+      n++;
+    } catch (e) { dire("msg-photos", "« " + f.name + " » : " + e.message, false); }
+  }
+  $("envoyer-photos").disabled = false;
+  $("fichiers").value = "";
+  afficher_vignettes();
+  if (n) dire("msg-photos", n + " photo(s) ajoutée(s). Pensez à « Enregistrer le contenu ».", true);
+};
+
+$("save").onclick = async () => {
+  const programme = $("programme").value.split("\n")
+    .map(l => l.trim()).filter(Boolean)
+    .map(l => { const p = l.split("|").map(x => x.trim()); return [p[0] || "", p[1] || "", p[2] || ""]; });
+  const dt = $("dateISO").value;
+  const contenu = {
+    kicker:   $("kicker").value.trim(),
+    marie1:   $("marie1").value.trim(),
+    marie2:   $("marie2").value.trim(),
+    dateTexte:$("dateTexte").value.trim(),
+    dateISO:  dt ? (dt.length === 16 ? dt + ":00" : dt) : "",
+    lieu:     $("lieu").value.trim(),
+    adresse:  $("adresse").value.trim(),
+    email:    $("email").value.trim(),
+    rsvpAvant:$("rsvpAvant").value.trim(),
+    programme: programme,
+    photos:   PHOTOS
+  };
+  if (!contenu.marie1 || !contenu.marie2) return dire("msg-con", "Les deux prénoms sont nécessaires.", false);
+  $("save").disabled = true; $("save").textContent = "Enregistrement…";
+  try {
+    const r = await api("/admin/contenu", {method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({contenu: contenu})});
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || "Erreur");
+    remplir_formulaire(d.contenu);
+    dire("msg-con", "Contenu enregistré. Le site se met à jour dans une minute environ.", true);
+  } catch (e) {
+    dire("msg-con", "Enregistrement impossible : " + e.message, false);
+  } finally {
+    $("save").disabled = false; $("save").textContent = "Enregistrer le contenu";
+  }
 };
 
 if (KEY) charger(); else $("login").style.display = "block";
-setInterval(() => { if (KEY && document.visibilityState === "visible") charger(); }, 30000);
+$("enter").onclick = () => { KEY = $("key").value.trim(); charger(); };
+$("key").addEventListener("keydown", e => { if (e.key === "Enter") $("enter").click(); });
+setInterval(() => { if (KEY && document.visibilityState === "visible") { charger(); if ($("v-con").style.display === "block") charger_contenu(); } }, 60000);
 </script>
 </body>
 </html>

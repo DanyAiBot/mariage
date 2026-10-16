@@ -22,12 +22,8 @@
   h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:.01em;margin:0}
   a{color:var(--gold)}
   .wrap{max-width:960px;margin:0 auto;padding:0 20px}
-  /* ---------- hero ---------- */
-  header.hero{
-    position:relative;text-align:center;padding:72px 20px 64px;
-    background:linear-gradient(160deg,#fdfaf6 0%,#f4ece2 100%);
-    border-bottom:1px solid var(--line);
-  }
+  header.hero{position:relative;text-align:center;padding:72px 20px 64px;
+    background:linear-gradient(160deg,#fdfaf6 0%,#f4ece2 100%);border-bottom:1px solid var(--line)}
   .kicker{font-family:var(--sans);text-transform:uppercase;letter-spacing:.32em;font-size:.7rem;color:var(--gold);margin-bottom:16px}
   .rings{width:min(340px,72vw);height:auto;margin:0 auto 10px;display:block}
   .hero h1{font-size:clamp(2.4rem,7vw,4.2rem);line-height:1.1}
@@ -39,19 +35,16 @@
   .cd{background:#fff;border:1px solid var(--line);border-radius:14px;min-width:82px;padding:12px 14px}
   .cd b{display:block;font-family:var(--serif);font-size:1.9rem;line-height:1}
   .cd span{font-size:.66rem;text-transform:uppercase;letter-spacing:.16em;color:var(--ink-soft)}
-  /* ---------- sections ---------- */
   section{padding:64px 0;border-bottom:1px solid var(--line)}
   section:last-of-type{border-bottom:0}
   h2{font-size:clamp(1.7rem,4vw,2.4rem);margin-bottom:8px}
   .sub{color:var(--ink-soft);margin:0 0 32px}
-  /* ---------- timeline ---------- */
   .timeline{list-style:none;margin:0;padding:0}
   .timeline li{display:grid;grid-template-columns:96px 1fr;gap:18px;padding:18px 0;border-top:1px dashed var(--line)}
   .timeline li:first-child{border-top:0}
   .timeline time{font-family:var(--serif);font-size:1.4rem;color:var(--gold)}
   .timeline strong{display:block;font-size:1.02rem}
   .timeline small{color:var(--ink-soft)}
-  /* ---------- gallery ---------- */
   .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
   .gallery figure{margin:0;position:relative;overflow:hidden;border-radius:12px;background:#efe7dc;aspect-ratio:4/3;cursor:zoom-in;border:1px solid var(--line)}
   .gallery img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
@@ -60,7 +53,6 @@
     background:linear-gradient(transparent,rgba(0,0,0,.55));opacity:0;transition:opacity .3s ease}
   .gallery figure:hover figcaption{opacity:1}
   .empty{border:1px dashed var(--line);border-radius:12px;padding:28px;text-align:center;color:var(--ink-soft);background:#fff}
-  /* lightbox */
   .lb{position:fixed;inset:0;background:rgba(28,22,20,.94);display:none;align-items:center;justify-content:center;z-index:50;padding:24px}
   .lb.open{display:flex}
   .lb img{max-width:100%;max-height:88vh;border-radius:8px}
@@ -69,15 +61,12 @@
   .lb .prev{left:12px;top:50%;transform:translateY(-50%)}
   .lb .next{right:12px;top:50%;transform:translateY(-50%)}
   .lb .close{right:14px;top:10px}
-  /* ---------- info cards ---------- */
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
   .card h3{font-size:1.15rem;margin-bottom:6px}
   .card p{margin:.3rem 0;color:var(--ink-soft)}
   .btn{display:inline-block;margin-top:10px;background:var(--gold);color:#fff;text-decoration:none;padding:11px 20px;border-radius:999px;font-size:.9rem;border:0;cursor:pointer;font-family:var(--sans)}
   .btn:disabled{opacity:.5;cursor:default}
-  .btn.ghost{background:none;color:var(--gold);border:1px solid var(--gold)}
-  /* ---------- RSVP ---------- */
   .rsvp{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px}
   .rsvp-form{display:grid;gap:14px;max-width:460px}
   .rsvp-form label{font-size:.85rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft)}
@@ -93,10 +82,6 @@
   .score{background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center}
   .score b{display:block;font-family:var(--serif);font-size:2.4rem;line-height:1;color:var(--gold)}
   .score span{font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;color:var(--ink-soft)}
-  .guestlist{margin-top:18px;font-size:.92rem;color:var(--ink-soft)}
-  .guestlist details{margin-top:8px}
-  .guestlist summary{cursor:pointer;color:var(--gold)}
-  .guestlist ul{margin:8px 0 0;padding-left:18px}
   footer{padding:40px 20px 64px;text-align:center;color:var(--ink-soft);font-size:.85rem}
   footer .heart{color:var(--gold)}
 </style>
@@ -105,21 +90,20 @@
 
 <script>
 /* ============================================================
-   À MODIFIER — tout le contenu du site est ici.
+   Valeurs par défaut. Le contenu réel est lu dans contenu.json
+   (modifiable depuis la page admin) ; si ce fichier est absent,
+   ces valeurs prennent le relais.
    ============================================================ */
-const CONFIG = {
+const DEFAUT = {
+  kicker:   "Nous nous marions",
   marie1:   "Guillaume",
   marie2:   "Valentia",
-  dateISO:  "2028-07-07T15:00:00",        /* heure de la cérémonie */
+  dateISO:  "2028-07-07T15:00:00",
   dateTexte:"Vendredi 7 juillet 2028",
   lieu:     "Lieu à préciser",
   adresse:  "Adresse à préciser",
-  email:    "",                           /* email de contact (vide = masqué) */
-
-  /* Service qui enregistre les réponses (compteur en direct). */
-  api:      "https://toll-spent-financing-innovations.trycloudflare.com",
-
-  /* Le déroulé de la journée */
+  email:    "",
+  rsvpAvant:"30 avril 2028",
   programme: [
     ["15h00", "Cérémonie civile",  "Mairie — arrivée conseillée 14h40"],
     ["16h30", "Cérémonie laïque",  "En plein air"],
@@ -127,15 +111,16 @@ const CONFIG = {
     ["20h30", "Dîner",             "Grande table"],
     ["23h00", "Bal & soirée",      "Jusqu'au bout de la nuit"],
   ],
-
-  /* Les photos : {src:"photos/ceremonie.jpg", legende:"La cérémonie"} */
   photos: [],
 };
+
+/* Service qui enregistre les réponses (compteur en direct). */
+const API = "https://toll-spent-financing-innovations.trycloudflare.com";
 /* ============================================================ */
 </script>
 
 <header class="hero">
-  <div class="kicker">Nous nous marions</div>
+  <div class="kicker" id="kicker"></div>
   <img class="rings" src="alliances.svg" alt="Deux alliances entrelacées">
   <h1><span id="n1"></span><span class="amp">&amp;</span><span id="n2"></span></h1>
   <div class="rule"></div>
@@ -192,8 +177,6 @@ const CONFIG = {
       <div class="score"><b id="s-non">–</b><span>réponses non</span></div>
     </div>
     <p class="sub" id="maj" style="margin-top:12px"></p>
-
-    <p class="sub" style="margin-top:18px">La liste des invités reste privée : seuls les compteurs sont affichés ici.</p>
   </section>
 
   <section class="wrap" id="programme">
@@ -221,7 +204,7 @@ const CONFIG = {
     <div class="cards">
       <div class="card">
         <h3>Répondre avant le</h3>
-        <p>Merci de confirmer votre présence avant le 30 avril 2028.</p>
+        <p id="deadline">Merci de confirmer votre présence.</p>
         <a class="btn" href="#rsvp-sec">Aller au formulaire</a>
       </div>
       <div class="card">
@@ -237,7 +220,7 @@ const CONFIG = {
 </main>
 
 <footer>
-  Guillaume &amp; Valentia — 7 juillet 2028 · réalisé avec <span class="heart">♥</span>
+  <span id="pied"></span> · réalisé avec <span class="heart">♥</span>
 </footer>
 
 <div class="lb" id="lb" role="dialog" aria-modal="true">
@@ -249,47 +232,71 @@ const CONFIG = {
 
 <script>
 const $ = (id) => document.getElementById(id);
-const esc = (s) => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
-/* --- textes --- */
-document.title = `${CONFIG.marie1} & ${CONFIG.marie2} — notre mariage`;
-$("n1").textContent = CONFIG.marie1;
-$("n2").textContent = CONFIG.marie2;
-$("date").textContent = CONFIG.dateTexte;
-$("place").textContent = CONFIG.lieu;
-$("adresse").textContent = CONFIG.adresse;
-$("maps").href = "https://www.openstreetmap.org/search?query=" + encodeURIComponent(CONFIG.adresse);
-if (CONFIG.email) $("contact").innerHTML = '<a href="mailto:' + esc(CONFIG.email) + '">' + esc(CONFIG.email) + '</a>';
-
-/* --- déroulé --- */
-$("timeline").innerHTML = CONFIG.programme.map(([h,t,d]) =>
-  '<li><time>' + esc(h) + '</time><div><strong>' + esc(t) + '</strong><small>' + esc(d) + '</small></div></li>').join("");
-
-/* --- compte à rebours --- */
-const target = new Date(CONFIG.dateISO).getTime();
-const pad = n => String(n).padStart(2, "0");
-function tick(){
-  const left = target - Date.now();
-  if (isNaN(target)) return;
-  $("cd").hidden = false;
-  if (left <= 0) { $("cd").innerHTML = '<div class="cd"><b>Le grand jour&nbsp;!</b></div>'; return; }
-  $("d").textContent = Math.floor(left / 864e5);
-  $("h").textContent = Math.floor(left / 36e5) % 24;
-  $("m").textContent = Math.floor(left / 6e4) % 60;
-  $("s").textContent = pad(Math.floor(left / 1e3) % 60);
-}
-tick(); setInterval(tick, 1000);
-
-/* --- galerie + lightbox --- */
-const ph = CONFIG.photos || [];
-if (!ph.length) $("empty").hidden = false;
-$("gallery").innerHTML = ph.map((p, i) =>
-  '<figure data-i="' + i + '"><img loading="lazy" src="' + esc(p.src) + '" alt="' + esc(p.legende||"") + '">' +
-  (p.legende ? '<figcaption>' + esc(p.legende) + '</figcaption>' : "") + '</figure>').join("");
-
+let CONFIG = Object.assign({}, DEFAUT);
+let ph = [];
 let cur = 0;
+
+/* ---------------- rendu du contenu ---------------- */
+function appliquer(){
+  const c = CONFIG;
+  document.title = c.marie1 + " & " + c.marie2 + " — notre mariage";
+  $("kicker").textContent = c.kicker || DEFAUT.kicker;
+  $("n1").textContent = c.marie1;
+  $("n2").textContent = c.marie2;
+  $("date").textContent = c.dateTexte;
+  $("place").textContent = c.lieu;
+  $("adresse").textContent = c.adresse;
+  $("maps").href = "https://www.openstreetmap.org/search?query=" + encodeURIComponent(c.adresse || c.lieu);
+  $("deadline").textContent = "Merci de confirmer votre présence avant le " + (c.rsvpAvant || "") + ".";
+  $("contact").innerHTML = c.email ? '<a href="mailto:' + esc(c.email) + '">' + esc(c.email) + '</a>'
+                                   : "Une question ? Écrivez-nous.";
+  $("pied").textContent = c.marie1 + " & " + c.marie2 + " — " + c.dateTexte;
+
+  const prog = (c.programme && c.programme.length) ? c.programme : DEFAUT.programme;
+  $("timeline").innerHTML = prog.map(([h, t, d]) =>
+    '<li><time>' + esc(h) + '</time><div><strong>' + esc(t) + '</strong><small>' + esc(d || "") + '</small></div></li>').join("");
+
+  ph = c.photos || [];
+  $("empty").hidden = ph.length > 0;
+  $("gallery").innerHTML = ph.map((p, i) =>
+    '<figure data-i="' + i + '"><img loading="lazy" src="' + esc(p.src) + '" alt="' + esc(p.legende || "") + '">' +
+    (p.legende ? '<figcaption>' + esc(p.legende) + '</figcaption>' : "") + '</figure>').join("");
+
+  demarrer_compte_a_rebours();
+}
+
+/* ---------------- compte à rebours ---------------- */
+let minuteur = null;
+function demarrer_compte_a_rebours(){
+  if (minuteur) clearInterval(minuteur);
+  const cible = new Date(CONFIG.dateISO).getTime();
+  if (isNaN(cible)) { $("cd").hidden = true; return; }
+  const pad = n => String(n).padStart(2, "0");
+  function tick(){
+    const reste = cible - Date.now();
+    $("cd").hidden = false;
+    if (reste <= 0) { $("cd").innerHTML = '<div class="cd"><b>Le grand jour&nbsp;!</b></div>'; clearInterval(minuteur); return; }
+    $("d").textContent = Math.floor(reste / 864e5);
+    $("h").textContent = Math.floor(reste / 36e5) % 24;
+    $("m").textContent = Math.floor(reste / 6e4) % 60;
+    $("s").textContent = pad(Math.floor(reste / 1e3) % 60);
+  }
+  tick();
+  minuteur = setInterval(tick, 1000);
+}
+
+/* ---------------- contenu : contenu.json sinon valeurs par défaut ---------------- */
+fetch("contenu.json?v=" + Date.now(), {cache: "no-store"})
+  .then(r => r.ok ? r.json() : {})
+  .then(d => { if (d && typeof d === "object") CONFIG = Object.assign({}, DEFAUT, d); })
+  .catch(() => {})
+  .finally(appliquer);
+
+/* ---------------- lightbox ---------------- */
 const lb = $("lb"), lbi = $("lbi");
-function show(i){ if(!ph.length) return; cur = (i + ph.length) % ph.length; lbi.src = ph[cur].src; lb.classList.add("open"); }
+function show(i){ if (!ph.length) return; cur = (i + ph.length) % ph.length; lbi.src = ph[cur].src; lb.classList.add("open"); }
 $("gallery").addEventListener("click", e => { const f = e.target.closest("figure"); if (f) show(+f.dataset.i); });
 $("lbc").onclick = () => lb.classList.remove("open");
 $("lbp").onclick = e => { e.stopPropagation(); show(cur - 1); };
@@ -302,7 +309,7 @@ document.addEventListener("keydown", e => {
   if (e.key === "ArrowRight") show(cur + 1);
 });
 
-/* --- RSVP --- */
+/* ---------------- RSVP ---------------- */
 const form = $("form"), msg = $("msg");
 form.addEventListener("change", () => {
   const v = (form.querySelector('input[name=rep]:checked') || {}).value;
@@ -311,7 +318,7 @@ form.addEventListener("change", () => {
   $("bloc-pers").hidden = v !== "oui";
 });
 
-function afficher(d){
+function afficher_compteurs(d){
   const c = d.counts || {};
   $("s-oui").textContent  = (c.foyers_oui === undefined ? "–" : c.foyers_oui);
   $("s-pers").textContent = (c.personnes === undefined ? "–" : c.personnes);
@@ -322,17 +329,17 @@ function afficher(d){
 
 function erreur(t){ msg.className = "msg err"; msg.textContent = t; }
 
-async function charger(){
+async function charger_compteurs(){
   try {
-    const r = await fetch(CONFIG.api + "/rsvp", {cache: "no-store"});
+    const r = await fetch(API + "/rsvp", {cache: "no-store"});
     if (!r.ok) throw new Error("HTTP " + r.status);
-    afficher(await r.json());
+    afficher_compteurs(await r.json());
   } catch (e) {
     $("scores").hidden = true;
     $("maj").innerHTML = "Le compteur en direct est momentanément indisponible — vous pouvez quand même envoyer votre réponse d'ici un instant.";
   }
 }
-charger();
+charger_compteurs();
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -343,7 +350,7 @@ form.addEventListener("submit", async (e) => {
   const pers = rep === "oui" ? parseInt($("pers").value, 10) : 1;
   $("send").disabled = true; $("send").textContent = "Envoi…";
   try {
-    const r = await fetch(CONFIG.api + "/rsvp", {
+    const r = await fetch(API + "/rsvp", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({nom: nom, reponse: rep, personnes: pers})
@@ -354,7 +361,7 @@ form.addEventListener("submit", async (e) => {
     msg.textContent = rep === "oui"
       ? ("Merci " + nom + " ! Votre présence est enregistrée pour " + pers + " personne(s).")
       : ("Merci " + nom + ", votre réponse a été enregistrée. Vous nous manquerez !");
-    afficher(d);
+    afficher_compteurs(d);
   } catch (err) {
     erreur("Envoi impossible pour l'instant (" + err.message + "). Réessayez dans un moment ou prévenez-nous directement.");
   } finally {
