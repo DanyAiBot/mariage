@@ -1,4 +1,13 @@
 {
-  "rsvp": [],
-  "maj": "16/10/2026 08:30"
+  "rsvp": [
+    {
+      "nom": "Verif Finale",
+      "reponse": "oui",
+      "personnes": 2,
+      "enfants": 0,
+      "message": "",
+      "quand": "16/10/2026 09:12"
+    }
+  ],
+  "maj": "16/10/2026 09:12"
 }
