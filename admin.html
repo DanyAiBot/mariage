@@ -99,7 +99,10 @@
 const API = "https://toll-spent-financing-innovations.trycloudflare.com";
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-let KEY = localStorage.getItem("mariage_admin_key") || "";
+/* La clé peut arriver par le lien : admin.html#k=<clé> (le fragment n'est jamais
+   envoyé au serveur ni journalisé). Elle est alors mémorisée puis retirée de l'URL. */
+const depuis_lien = (location.hash.match(/[#&]?k=([^&]+)/) || [])[1];
+let KEY = depuis_lien ? decodeURIComponent(depuis_lien) : (localStorage.getItem("mariage_admin_key") || "");
 let DATA = [];
 
 function show(t, ok){ const m = $("logmsg"); m.className = "msg " + (ok ? "ok" : "err"); m.textContent = t; }
@@ -129,6 +132,7 @@ async function charger(){
     $("login").style.display = "none";
     $("app").style.display = "block";
     localStorage.setItem("mariage_admin_key", KEY);
+    if (location.hash) history.replaceState(null, "", location.pathname);   /* la clé ne reste pas dans l'URL/ l'historique */
   } catch (e) {
     $("login").style.display = "block";
     $("app").style.display = "none";
