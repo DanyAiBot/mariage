@@ -5,7 +5,13 @@
       "reponse": "oui",
       "personnes": 2,
       "quand": "16/10/2026 08:04"
+    },
+    {
+      "nom": "Test Public",
+      "reponse": "non",
+      "personnes": 0,
+      "quand": "16/10/2026 08:06"
     }
   ],
-  "maj": "16/10/2026 08:04"
+  "maj": "16/10/2026 08:06"
 }
